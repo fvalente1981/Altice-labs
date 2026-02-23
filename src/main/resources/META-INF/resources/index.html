@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Labseq Calculator</title>
+
+    <!-- Simple CSS to make the page look cleaner -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            padding: 8px;
+            width: 120px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Labseq Calculator</h1>
+
+<!-- Input area -->
+<label for="n">Index n:</label>
+<input type="number" id="n" min="0" value="0">
+<button id="btn">Calculate</button>
+
+<!-- Result area -->
+<pre id="result"></pre>
+
+<script>
+    // When the user clicks the button, run this function
+    document.getElementById('btn').addEventListener('click', async () => {
+
+        // Read the number typed by the user
+        const n = document.getElementById('n').value;
+
+        // Reference to the result box
+        const resultEl = document.getElementById('result');
+
+        // Show loading message
+        resultEl.textContent = 'Loading...';
+
+        try {
+            // Call the backend REST endpoint
+            const res = await fetch(`/labseq/${n}`);
+
+            // If backend returns an error (e.g., 400 Bad Request)
+            if (!res.ok) {
+                const text = await res.text();
+                resultEl.textContent = `Error: ${res.status} - ${text}`;
+                return;
+            }
+
+            // Parse JSON response
+            const data = await res.json();
+
+            // Display the result
+            resultEl.textContent = `l(${data.index}) = ${data.value}`;
+
+        } catch (e) {
+            // If something goes wrong (network error, server down, etc.)
+            resultEl.textContent = 'Request failed: ' + e;
+        }
+    });
+</script>
+
+</body>
+</html>
