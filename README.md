@@ -1,70 +1,81 @@
 # code-with-quarkus
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project implements the LabSeq sequence using Quarkus, exposing a REST endpoint and a simple web interface for testing.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## About the LabSeq Sequence
 
-## Running the application in dev mode
+The LabSeq sequence is defined as:
 
-You can run your application in dev mode that enables live coding using:
+- l(0) = 0
+- l(1) = 1
+- l(2) = 0
+- l(3) = 1
+- For n ≥ 4:
+  l(n) = l(n − 4) + l(n − 3)
 
-```shell script
+This project includes an efficient implementation with caching to support large values.
+
+## Running the Application in Dev Mode
+
+Start the application with live reload:
+
+```bash
 ./mvnw quarkus:dev
-```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+
+The application will be available at:
+- Web UI: http://localhost:8080/index.html
+- API Endpoint: http://localhost:8080/labseq/{n}
+- Swagger UI: http://localhost:8080/q/swagger-ui
+- Dev UI: http://localhost:8080/q/dev/
+REST Endpoint
+GET /labseq/{n}
+Returns the LabSeq value for the given index n.
+Example request:
+GET http://localhost:8080/labseq/25
 
-## Packaging and running the application
 
-The application can be packaged using:
+Example response:
+138
 
-```shell script
+
+Rules:
+- n must be an integer greater than or equal to 0
+- The service uses caching for performance
+- Large values are supported
+Web Interface
+A simple HTML/JavaScript page is included for testing:
+http://localhost:8080/index.html
+
+
+You can enter a number and retrieve the LabSeq value without using external tools.
+Packaging the Application
+Build the application:
 ./mvnw package
-```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+The output will be located in:
+target/quarkus-app/
 
-If you want to build an _über-jar_, execute the following command:
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+Run the packaged application:
+java -jar target/quarkus-app/quarkus-run.jar
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
 
-## Creating a native executable
+Running Tests
+Execute the test suite:
+./mvnw test
 
-You can create a native executable using:
 
-```shell script
-./mvnw package -Dnative
-```
+Technologies Used
+- Java 17
+- Quarkus
+- Maven
+- JAX-RS
+- JUnit 5
+- HTML and JavaScript
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
-"# Altice-labs" 
-"# Altice-labs" 
+Quarkus Documentation
+For more information about Quarkus, visit:
+https://quarkus.io/
