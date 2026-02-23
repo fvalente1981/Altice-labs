@@ -21,7 +21,7 @@ This project includes an efficient implementation with caching to support large 
 
 Start the application with live reload:
 
-```bash
+
 ./mvnw quarkus:dev
 
 
